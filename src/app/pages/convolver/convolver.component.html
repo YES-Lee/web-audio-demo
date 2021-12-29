@@ -1,0 +1,20 @@
+<audio src="assets/audio/Return of the Heroes.mp3" controls #audioRef></audio>
+
+<mat-form-field appearance="fill">
+  <mat-label>环境效果</mat-label>
+  <mat-select [(value)]="mode">
+    <mat-option value="无">无</mat-option>
+    <mat-option *ngFor="let impulse of impulseList" [value]="impulse.name">
+      {{ impulse.name }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<div>
+  <a
+    href="https://github.com/YES-Lee/web-audio-demo/blob/7122b3bac6eaf4229d79154b427315d70258249c/src/app/pages/convolver/convolver.component.ts#L62-L65"
+    mat-button
+    target="_blank"
+    >查看源码</a
+  >
+</div>

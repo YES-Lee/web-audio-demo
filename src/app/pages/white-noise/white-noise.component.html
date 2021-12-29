@@ -1,0 +1,22 @@
+<button mat-stroked-button (click)="handlePlay()">播放白噪声</button>
+
+<canvas
+  oscilloscope
+  #timeDomainOscilloscope="oscilloscope"
+  [fftSize]="2048"
+  type="time"
+></canvas>
+
+<canvas
+  oscilloscope
+  #frequencyDomainOscilloscope="oscilloscope"
+  [fftSize]="2048"
+  type="frequency"
+></canvas>
+
+<a
+  href="https://github.com/YES-Lee/web-audio-demo/blob/7122b3bac6eaf4229d79154b427315d70258249c/src/app/pages/white-noise/white-noise.component.ts#L20-L29"
+  mat-button
+  target="_blank"
+  >查看源码</a
+>

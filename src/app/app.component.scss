@@ -1,0 +1,29 @@
+:host {
+  display: flex;
+  flex-flow: column nowrap;
+  height: 100%;
+}
+.spacer {
+  flex: 1 1 auto;
+}
+
+.app_header {
+  flex: none;
+}
+
+.app_content {
+  flex: auto;
+  height: 100%;
+  overflow: auto;
+  .app_main {
+    max-width: 720px;
+    width: 100%;
+    margin: auto;
+    padding: 2rem 0;
+    box-sizing: border-box;
+
+    @media screen and (max-width:720px) {
+      padding: 1.5rem 1rem;
+    }
+  }
+}

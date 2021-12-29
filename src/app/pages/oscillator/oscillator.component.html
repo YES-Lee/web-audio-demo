@@ -1,0 +1,53 @@
+<h1>Oscillator Example</h1>
+
+<button (click)="handlePlay()">Play</button>
+<button (click)="handleStop()">Stop</button>
+<button (click)="handleChangeWaveType('sine')">Sine</button>
+<button (click)="handleChangeWaveType('square')">Square</button>
+<button (click)="handleChangeWaveType('triangle')">Triangle</button>
+<button (click)="handleChangeWaveType('sawtooth')">Sawtooth</button>
+<button (click)="handleChangeWaveType('custom')">custom</button>
+<div class="controls">
+  <div>
+    <input
+      #frequencyInput
+      type="range"
+      min="100"
+      max="2000"
+      step="10"
+      [value]="frequency"
+      (input)="handleFrequencyChange(frequencyInput.value)"
+    />
+    <span>Frequency: {{ frequency }}Hz</span>
+  </div>
+  <div>
+    <input
+      #gainInput
+      type="range"
+      min="0"
+      max="1"
+      step="0.01"
+      [value]="gain"
+      (input)="handleGainChange(gainInput.value)"
+    />
+    <span>Volume: {{ (gain * 100).toFixed(0) }}%</span>
+  </div>
+</div>
+
+<canvas
+  oscilloscope
+  #timeDomainOscilloscope="oscilloscope"
+  type="time"
+></canvas>
+<canvas
+  oscilloscope
+  #frequencyDomainOscilloscope="oscilloscope"
+  type="frequency"
+></canvas>
+
+<a
+  href="https://github.com/YES-Lee/web-audio-demo/blob/7122b3bac6eaf4229d79154b427315d70258249c/src/app/pages/oscillator/oscillator.component.ts#L30-L35"
+  mat-button
+  target="_blank"
+  >查看源码</a
+>

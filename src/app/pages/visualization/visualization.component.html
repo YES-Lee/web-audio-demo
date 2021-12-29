@@ -1,0 +1,17 @@
+<!-- <audio
+  src="/assets/audio/Esperanza (Radio Edit).mp3"
+  controls
+  #audioRef
+></audio> -->
+<button mat-stroked-button [disabled]="!loaded" (click)="handleStart()">
+  ▶️
+</button>
+<p class="progress">已加载：{{ loadProgress }}%</p>
+<canvas #canvasRef></canvas>
+
+<a
+  href="https://github.com/YES-Lee/web-audio-demo/blob/7122b3bac6eaf4229d79154b427315d70258249c/src/app/pages/visualization/visualization.component.ts"
+  mat-button
+  target="_blank"
+  >查看源码</a
+>

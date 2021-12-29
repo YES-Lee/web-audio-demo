@@ -1,0 +1,10 @@
+<div class="example_list">
+  <a [routerLink]="item.path" *ngFor="let item of examples">
+    <mat-card class="example_item_card">
+      <mat-card-header>
+        <mat-card-title>{{ item.title }}</mat-card-title>
+        <mat-card-subtitle>{{ item.subtitle }}</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+  </a>
+</div>

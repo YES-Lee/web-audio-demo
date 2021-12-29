@@ -1,0 +1,23 @@
+<mat-card class="equalizer">
+  <ng-container *ngFor="let filter of filterList">
+    <div class="bar">
+      <mat-slider
+        vertical
+        [min]="-12"
+        [max]="12"
+        step="1"
+        thumbLabel
+        [displayWith]="formatLabel"
+        [value]="filter.gain.value"
+        (input)="filter.gain.value = $event.value!"
+      ></mat-slider>
+      <div class="bar--bottom">
+        {{
+          filter.frequency.value >= 1000
+            ? filter.frequency.value / 1000 + "K"
+            : filter.frequency.value
+        }}
+      </div>
+    </div>
+  </ng-container>
+</mat-card>
