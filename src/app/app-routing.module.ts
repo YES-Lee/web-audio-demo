@@ -12,40 +12,40 @@ import { WhiteNoiseComponent } from './pages/white-noise/white-noise.component';
 const routes: Routes = [
   {
     path: '',
-    component: ExamplesComponent
+    component: ExamplesComponent,
   },
   {
     path: 'oscillator',
-    component: OscillatorComponent
+    component: OscillatorComponent,
   },
   {
     path: 'visualization',
-    component: VisualizationComponent
+    component: VisualizationComponent,
   },
   {
     path: 'audio-stream',
-    component: AudioStreamComponent
+    component: AudioStreamComponent,
   },
   {
     path: 'biquad-filter',
-    component: BiquadFilterComponent
+    component: BiquadFilterComponent,
   },
   {
     path: 'panner',
-    component: PannerComponent
+    component: PannerComponent,
   },
   {
     path: 'white-noise',
-    component: WhiteNoiseComponent
+    component: WhiteNoiseComponent,
   },
   {
     path: 'convolver',
-    component: ConvolverComponent
-  }
+    component: ConvolverComponent,
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
