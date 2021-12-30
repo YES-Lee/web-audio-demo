@@ -1,16 +1,21 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Inject,
+  ViewChild,
+} from '@angular/core';
+import { GLOBAL_AUDIO_CONTEXT } from '../../shared/inject-tokens';
 import { Listener } from './listener';
 import { Speaker } from './speaker';
 
 @Component({
   templateUrl: 'panner.component.html',
-  styleUrls: ['panner.component.scss']
+  styleUrls: ['panner.component.scss'],
 })
 export class PannerComponent implements AfterViewInit {
-
   @ViewChild('audioRef') audioRef!: ElementRef<HTMLAudioElement>;
 
-  private ac!: AudioContext;
   private source!: MediaElementAudioSourceNode;
   private panner!: PannerNode;
   private listener!: AudioListener;
@@ -18,7 +23,7 @@ export class PannerComponent implements AfterViewInit {
   private listenerNode!: Listener;
   @ViewChild('canvasRef') canvasRef!: ElementRef<HTMLCanvasElement>;
 
-  constructor() {}
+  constructor(@Inject(GLOBAL_AUDIO_CONTEXT) private ac: AudioContext) {}
 
   ngAfterViewInit(): void {
     this.initPanner();
@@ -26,7 +31,6 @@ export class PannerComponent implements AfterViewInit {
   }
 
   initPanner(): void {
-    this.ac = new AudioContext();
     this.source = this.ac.createMediaElementSource(this.audioRef.nativeElement);
     this.panner = this.ac.createPanner();
     this.panner.panningModel = 'HRTF'; // 音频空间化算法模型
@@ -61,18 +65,22 @@ export class PannerComponent implements AfterViewInit {
     const canvasCtx = $canvas.getContext('2d');
 
     this.listenerNode = new Listener($canvas.width / 2, $canvas.height / 2);
-    this.listenerNode.draw(canvasCtx!);
-    this.updateListenerPosition(this.listenerNode.x, 0, this.listenerNode.y);
+    this.listenerNode.onLoad = () => {
+      this.listenerNode.draw(canvasCtx!);
+      this.updateListenerPosition(this.listenerNode.x, 0, this.listenerNode.y);
+    };
 
     this.speakerNode = new Speaker($canvas.width / 2, $canvas.height / 2 - 100);
-    this.speakerNode.draw(canvasCtx!);
-    this.updatePannerPosition(this.speakerNode.x, 0, this.speakerNode.y);
+    this.speakerNode.onLoad = () => {
+      this.speakerNode.draw(canvasCtx!);
+      this.updatePannerPosition(this.speakerNode.x, 0, this.speakerNode.y);
+    };
 
     const lastPos = {
       x: 0,
-      y: 0
+      y: 0,
     };
-    $canvas.addEventListener('mousemove', event => {
+    $canvas.addEventListener('mousemove', (event) => {
       const { offsetX, offsetY } = event;
       if (this.speakerNode.isMouseOver(offsetX, offsetY)) {
         $canvas.style.cursor = 'move';
@@ -94,11 +102,14 @@ export class PannerComponent implements AfterViewInit {
       }
     });
 
-    window.addEventListener('mousedown', event => {
+    window.addEventListener('mousedown', (event) => {
       const { offsetX, offsetY } = event;
       lastPos.x = offsetX;
       lastPos.y = offsetY;
-      this.speakerNode.dragging = this.speakerNode.isMouseOver(offsetX, offsetY);
+      this.speakerNode.dragging = this.speakerNode.isMouseOver(
+        offsetX,
+        offsetY
+      );
     });
 
     window.addEventListener('mouseup', () => {
@@ -116,5 +127,9 @@ export class PannerComponent implements AfterViewInit {
     this.listener.positionX.value = x;
     this.listener.positionY.value = y;
     this.listener.positionZ.value = z;
+  }
+
+  handlePlay() {
+    this.ac.resume();
   }
 }

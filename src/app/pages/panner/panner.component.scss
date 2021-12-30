@@ -30,3 +30,11 @@ audio {
     }
   }
 }
+
+canvas {
+  display: block;
+  border: 1px solid #ddd;
+  width: 500px;
+  height: 400px;
+  margin: 10px auto;
+}

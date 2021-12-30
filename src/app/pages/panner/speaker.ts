@@ -1,13 +1,18 @@
-export class Speaker {
+import { ImageNode } from './image-node';
+
+export class Speaker extends ImageNode {
   x: number;
   y: number;
-  radius: number;
+  width: number;
+  height: number;
   dragging: boolean;
 
   constructor(x: number, y: number) {
+    super('/assets/image/radio.png');
     this.x = x;
     this.y = y;
-    this.radius = 10;
+    this.width = 50;
+    this.height = 50;
     this.dragging = false;
   }
 
@@ -18,14 +23,23 @@ export class Speaker {
   }
 
   draw(ctx: CanvasRenderingContext2D): Speaker {
-    ctx.fillStyle = 'orange';
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
-    ctx.fill();
+    ctx.drawImage(
+      this.image,
+      this.x - this.width / 2,
+      this.y - this.height / 2,
+      this.width,
+      this.height
+    );
+
     return this;
   }
 
   isMouseOver(x: number, y: number): boolean {
-    return Math.sqrt(Math.pow((x - this.x), 2) + Math.pow(y - this.y, 2)) <= this.radius;
+    return (
+      x >= this.x - this.width / 2 &&
+      x <= this.x + this.width / 2 &&
+      y >= this.y - this.height / 2 &&
+      y <= this.y + this.height / 2
+    );
   }
 }

@@ -5,9 +5,16 @@ import {
   HttpRequest,
   HttpResponse,
 } from '@angular/common/http';
-import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Inject,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
 import { VisualizerParticle } from '../../components/visualizer-particle/visualizer-particle';
 import { last, map } from 'rxjs/operators';
+import { GLOBAL_AUDIO_CONTEXT } from '../../shared/inject-tokens';
 
 @Component({
   templateUrl: 'visualization.component.html',
@@ -15,14 +22,15 @@ import { last, map } from 'rxjs/operators';
 })
 export class VisualizationComponent implements OnDestroy {
   @ViewChild('canvasRef') canvasRef!: ElementRef<HTMLCanvasElement>;
-  private ac: AudioContext;
   private source?: AudioBufferSourceNode;
   private visualizer?: VisualizerParticle;
   loaded = false;
   loadProgress = 0;
 
-  constructor(private http: HttpClient) {
-    this.ac = new AudioContext();
+  constructor(
+    private http: HttpClient,
+    @Inject(GLOBAL_AUDIO_CONTEXT) private ac: AudioContext
+  ) {
     this.loadMusic();
   }
 

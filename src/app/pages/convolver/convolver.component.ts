@@ -3,9 +3,11 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  Inject,
   OnDestroy,
   ViewChild,
 } from '@angular/core';
+import { GLOBAL_AUDIO_CONTEXT } from '../../shared/inject-tokens';
 
 @Component({
   templateUrl: 'convolver.component.html',
@@ -40,7 +42,6 @@ export class ConvolverComponent implements OnDestroy, AfterViewInit {
   ];
 
   private impulseName = '无';
-  private ac: AudioContext;
   private source?: MediaElementAudioSourceNode;
   private convolver?: ConvolverNode;
 
@@ -60,9 +61,10 @@ export class ConvolverComponent implements OnDestroy, AfterViewInit {
     }
   }
 
-  constructor(private http: HttpClient) {
-    this.ac = new AudioContext();
-  }
+  constructor(
+    private http: HttpClient,
+    @Inject(GLOBAL_AUDIO_CONTEXT) private ac: AudioContext
+  ) {}
 
   ngAfterViewInit(): void {
     this.source = this.ac.createMediaElementSource(this.audioRef.nativeElement);
@@ -84,4 +86,8 @@ export class ConvolverComponent implements OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy(): void {}
+
+  handlePlay() {
+    this.ac.resume();
+  }
 }

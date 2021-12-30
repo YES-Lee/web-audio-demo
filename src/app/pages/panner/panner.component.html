@@ -1,16 +1,12 @@
-<audio src="/assets/audio/Return of the Heroes.mp3" #audioRef controls></audio>
+<audio
+  src="/assets/audio/Return of the Heroes.mp3"
+  #audioRef
+  controls
+  (play)="handlePlay()"
+></audio>
 <p>
-  蓝色箭头代表收听者<br />
-  箭头朝向为面部朝向<br />
-  橙色小球代表声源<br />
-  <strong>播放音乐，拖拽橙色小球改变声源位置</strong><br />
+  <strong>1. 播放音乐</strong><br />
+  <strong>2. 拖拽收音机的位置</strong><br />
   <i>戴上耳机效果更好哦</i><br />
 </p>
 <canvas #canvasRef></canvas>
-
-<a
-  href="https://github.com/YES-Lee/web-audio-demo/blob/7122b3bac6eaf4229d79154b427315d70258249c/src/app/pages/panner/panner.component.ts#L29-L53"
-  mat-button
-  target="_blank"
-  >查看源码</a
->
