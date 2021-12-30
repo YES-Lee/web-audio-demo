@@ -1,36 +1,42 @@
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
 
 @Component({
   templateUrl: 'convolver.component.html',
-  styleUrls: ['convolver.component.scss']
+  styleUrls: ['convolver.component.scss'],
 })
 export class ConvolverComponent implements OnDestroy, AfterViewInit {
   impulseList = [
     {
       name: '电话',
-      src: '/assets/audio/impulse/filter-telephone.wav'
+      src: '/assets/audio/impulse/filter-telephone.wav',
     },
     {
       name: '室内',
-      src: '/assets/audio/impulse/spreader50-65ms.wav'
+      src: '/assets/audio/impulse/spreader50-65ms.wav',
     },
     {
       name: '山洞',
-      src: '/assets/audio/impulse/feedback-spring.wav'
+      src: '/assets/audio/impulse/feedback-spring.wav',
     },
     {
       name: '教堂',
-      src: '/assets/audio/impulse/bin_dfeq/s2_r4_bd.wav'
+      src: '/assets/audio/impulse/bin_dfeq/s2_r4_bd.wav',
     },
     {
       name: '厨房',
-      src: '/assets/audio/impulse/house-impulses/kitchen-true-stereo.wav'
+      src: '/assets/audio/impulse/house-impulses/kitchen-true-stereo.wav',
     },
     {
       name: '洗手间',
-      src: '/assets/audio/impulse/house-impulses/living-bedroom-leveled.wav'
-    }
+      src: '/assets/audio/impulse/house-impulses/living-bedroom-leveled.wav',
+    },
   ];
 
   private impulseName = '无';
@@ -46,7 +52,7 @@ export class ConvolverComponent implements OnDestroy, AfterViewInit {
   set mode(value: string) {
     this.impulseName = value;
     if (value !== '无') {
-      const node = this.impulseList.find(item => item.name === value);
+      const node = this.impulseList.find((item) => item.name === value);
       this.setImpulse(node!.src);
     } else {
       this.source?.disconnect();
@@ -66,16 +72,16 @@ export class ConvolverComponent implements OnDestroy, AfterViewInit {
   }
 
   setImpulse(impulse: string): void {
-    this.http.get(impulse, {
-      responseType: 'arraybuffer'
-    }).subscribe(async buffer => {
-      this.convolver!.buffer = await this.ac.decodeAudioData(buffer);
-      this.source?.disconnect();
-      this.source?.connect(this.convolver!);
-    });
+    this.http
+      .get(impulse, {
+        responseType: 'arraybuffer',
+      })
+      .subscribe(async (buffer) => {
+        this.convolver!.buffer = await this.ac.decodeAudioData(buffer);
+        this.source?.disconnect();
+        this.source?.connect(this.convolver!);
+      });
   }
 
-  ngOnDestroy(): void {
-    this.ac.close();
-  }
+  ngOnDestroy(): void {}
 }

@@ -58,7 +58,17 @@ import { GLOBAL_AUDIO_CONTEXT } from './shared/inject-tokens';
   providers: [
     {
       provide: GLOBAL_AUDIO_CONTEXT,
-      useValue: new AudioContext(),
+      useFactory: () => {
+        const ac = new AudioContext();
+        if (ac.state === 'suspended') {
+          const handler = () => {
+            ac.resume();
+            window.removeEventListener('click', handler, true);
+          };
+          window.addEventListener('click', handler, true);
+        }
+        return ac;
+      },
     },
     {
       provide: 'EXAMPLES',

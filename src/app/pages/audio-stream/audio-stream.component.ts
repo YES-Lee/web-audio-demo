@@ -39,7 +39,6 @@ export class AudioStreamComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.ac?.close();
     this.source?.disconnect();
     this.stream?.getTracks().map((track) => track.stop());
   }

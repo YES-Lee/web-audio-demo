@@ -80,6 +80,5 @@ export class OscillatorComponent implements OnDestroy {
     this.timeDomainOscilloscope.stop();
     this.frequencyDomainOscilloscope.stop();
     this.sourceNode?.disconnect();
-    this.audioContext?.close();
   }
 }

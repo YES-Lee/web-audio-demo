@@ -11,12 +11,15 @@ audio {
 
 .controllers {
   margin: 0 auto;
-  .top, .middle, .bottom {
+  .top,
+  .middle,
+  .bottom {
     text-align: center;
     margin: 5px;
   }
   .middle {
-    >button, >.monitor {
+    > button,
+    > .monitor {
       margin: 0 5px;
     }
     .monitor {
@@ -26,12 +29,4 @@ audio {
       padding: 10px 0;
     }
   }
-}
-
-canvas {
-  display: block;
-  border: 1px solid #ddd;
-  width: 500px;
-  height: 400px;
-  margin: 10px auto;
 }

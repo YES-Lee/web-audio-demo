@@ -43,6 +43,16 @@ export class OscilloscopeDirective implements OnInit, OnDestroy {
       'margin',
       '1rem auto'
     );
+    this._renderer2.setStyle(
+      this._elementRef.nativeElement,
+      'background-size',
+      '10px 10px, 10px 10px, 50px 50px, 50px 50px'
+    );
+    this._renderer2.setStyle(
+      this._elementRef.nativeElement,
+      'background-image',
+      'linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 0), linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 0), linear-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 0), linear-gradient(90deg, rgba(0, 0, 0, 0.08) 1px, transparent 0)'
+    );
     this._renderer2.setStyle(this._elementRef.nativeElement, 'width', '512px');
     this._renderer2.setStyle(this._elementRef.nativeElement, 'height', '100px');
   }
