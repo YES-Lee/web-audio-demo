@@ -1,5 +1,10 @@
-<button mat-stroked-button [disabled]="!loaded" (click)="handleStart()">
+<button
+  mat-stroked-button
+  [disabled]="!loaded"
+  (click)="handleStart()"
+  #playButton
+>
   ▶️
 </button>
-<p class="progress">已加载：{{ loadProgress }}%</p>
+<p *ngIf="loadProgress < 100" class="progress">已加载：{{ loadProgress }}%</p>
 <canvas #canvasRef></canvas>
