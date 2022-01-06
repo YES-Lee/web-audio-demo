@@ -16,7 +16,15 @@ import { GLOBAL_AUDIO_CONTEXT } from '../shared/inject-tokens';
 export class OscilloscopeDirective implements OnInit, OnDestroy {
   @Input() type: 'time' | 'frequency' = 'time';
   @Input() fftSize: number = 2048;
+  @Input() set frequency(value: [number, number]) {
+    const [min, max] = value;
+    this._frequency = [
+      this.fftSize * 0.5 * ((min * 2) / this._audioContext.sampleRate),
+      this.fftSize * 0.5 * ((max * 2) / this._audioContext.sampleRate),
+    ];
+  }
 
+  private _frequency!: [number, number];
   private _source?: AudioNode;
   private _analyser?: AnalyserNode;
   private _rafId?: number | null;
@@ -25,36 +33,14 @@ export class OscilloscopeDirective implements OnInit, OnDestroy {
     private _elementRef: ElementRef<HTMLCanvasElement>,
     private _renderer2: Renderer2,
     @Inject(GLOBAL_AUDIO_CONTEXT) private _audioContext: AudioContext
-  ) {}
+  ) {
+    if (!this._frequency) {
+      this.frequency = [0, 2000];
+    }
+  }
 
   ngOnInit(): void {
-    this._renderer2.setStyle(
-      this._elementRef.nativeElement,
-      'border',
-      '1px solid #cccccc'
-    );
-    this._renderer2.setStyle(
-      this._elementRef.nativeElement,
-      'display',
-      'block'
-    );
-    this._renderer2.setStyle(
-      this._elementRef.nativeElement,
-      'margin',
-      '1rem auto'
-    );
-    this._renderer2.setStyle(
-      this._elementRef.nativeElement,
-      'background-size',
-      '10px 10px, 10px 10px, 50px 50px, 50px 50px'
-    );
-    this._renderer2.setStyle(
-      this._elementRef.nativeElement,
-      'background-image',
-      'linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 0), linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 0), linear-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 0), linear-gradient(90deg, rgba(0, 0, 0, 0.08) 1px, transparent 0)'
-    );
-    this._renderer2.setStyle(this._elementRef.nativeElement, 'width', '512px');
-    this._renderer2.setStyle(this._elementRef.nativeElement, 'height', '100px');
+    this._setStyle();
   }
 
   ngOnDestroy(): void {
@@ -89,16 +75,18 @@ export class OscilloscopeDirective implements OnInit, OnDestroy {
   private plot(): void {
     if (!this._analyser) return;
     const bufferLength = this._analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
+    const fftSize = this._analyser.fftSize;
+    const frequencyDataArray = new Uint8Array(bufferLength);
+    const timeDataArray = new Uint8Array(fftSize);
     switch (this.type) {
       case 'frequency': {
-        this._analyser.getByteFrequencyData(dataArray);
-        this.drawFrequencyDomain(dataArray);
+        this._analyser.getByteFrequencyData(frequencyDataArray);
+        this.drawFrequencyDomain(frequencyDataArray);
         break;
       }
       case 'time': {
-        this._analyser.getByteTimeDomainData(dataArray);
-        this.drawTimeDomain(dataArray);
+        this._analyser.getByteTimeDomainData(timeDataArray);
+        this.drawTimeDomain(timeDataArray);
         break;
       }
       default:
@@ -118,7 +106,7 @@ export class OscilloscopeDirective implements OnInit, OnDestroy {
     }
     canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
-    canvasContext.lineWidth = 2;
+    canvasContext.lineWidth = 4;
     canvasContext.strokeStyle = '#00BCD4';
 
     canvasContext.beginPath();
@@ -136,9 +124,12 @@ export class OscilloscopeDirective implements OnInit, OnDestroy {
 
   private drawFrequencyDomain(dataArray: Uint8Array): void {
     const canvas = this._elementRef.nativeElement;
-    const bufferLength = dataArray.length;
+    const [minFrequency, maxFrequency] = this._frequency;
     const canvasContext = canvas.getContext('2d');
-    canvas.width = bufferLength;
+    const gap = 1;
+    const barWidth = 2;
+    let barHeight = 0;
+    canvas.width = (maxFrequency - minFrequency) * (gap + barWidth);
     canvas.height = 300;
     if (!canvasContext) {
       return;
@@ -147,11 +138,8 @@ export class OscilloscopeDirective implements OnInit, OnDestroy {
     canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
     canvasContext.fillStyle = '#00BCD4';
-    const gap = 1;
-    const barWidth = (canvas.width * 2) / bufferLength;
-    let barHeight = 0;
     let x = 0;
-    for (let i = 0; i < bufferLength; i++) {
+    for (let i = minFrequency; i < maxFrequency; i++) {
       barHeight = ((canvas.height - 40) * (dataArray[i] || 1)) / 255;
       canvasContext.fillRect(
         x,
@@ -161,5 +149,35 @@ export class OscilloscopeDirective implements OnInit, OnDestroy {
       );
       x += barWidth + gap;
     }
+  }
+
+  private _setStyle() {
+    this._renderer2.setStyle(
+      this._elementRef.nativeElement,
+      'border',
+      '1px solid #cccccc'
+    );
+    this._renderer2.setStyle(
+      this._elementRef.nativeElement,
+      'display',
+      'block'
+    );
+    this._renderer2.setStyle(
+      this._elementRef.nativeElement,
+      'margin',
+      '1rem auto'
+    );
+    this._renderer2.setStyle(
+      this._elementRef.nativeElement,
+      'background-size',
+      '10px 10px, 10px 10px, 50px 50px, 50px 50px'
+    );
+    this._renderer2.setStyle(
+      this._elementRef.nativeElement,
+      'background-image',
+      'linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 0), linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 0), linear-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 0), linear-gradient(90deg, rgba(0, 0, 0, 0.08) 1px, transparent 0)'
+    );
+    this._renderer2.setStyle(this._elementRef.nativeElement, 'width', '512px');
+    this._renderer2.setStyle(this._elementRef.nativeElement, 'height', '100px');
   }
 }

@@ -59,7 +59,7 @@ import { GLOBAL_AUDIO_CONTEXT } from './shared/inject-tokens';
     {
       provide: GLOBAL_AUDIO_CONTEXT,
       useFactory: () => {
-        const ac = new AudioContext();
+        const ac = new AudioContext({ sampleRate: 48000 });
         // chrome 浏览器限制了必需用户和网页进行交互之后才能开始 AudioContext，因此需要在用户第一次交互后执行 resume
         if (ac.state === 'suspended') {
           const handler = () => {

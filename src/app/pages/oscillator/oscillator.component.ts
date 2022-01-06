@@ -65,8 +65,8 @@ export class OscillatorComponent implements OnDestroy {
   handleChangeWaveType(type: OscillatorNode['type']): void {
     if (this.sourceNode) {
       if (type === 'custom') {
-        const real = [0, 0, 1, 0, 1]; // cosine terms
-        const imag = [0, 0, 0, 0, 0]; // sine terms
+        const real = [0, 0, 1, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01]; // cosine terms
+        const imag = [0, 0, 0, 0, 0, 0, 0, 0, 0]; // sine terms
         const periodicWave = this.audioContext.createPeriodicWave(real, imag);
         this.sourceNode.setPeriodicWave(periodicWave);
       } else {
